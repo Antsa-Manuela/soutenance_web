@@ -1,4 +1,3 @@
-<!-- frontend/src/views/Dashboard.vue -->
 <template>
   <div class="dashboard">
     <h2>Bienvenue, {{ nomEtablissement }}</h2>
@@ -7,9 +6,26 @@
     <section class="resume">
       <h3>Résumé rapide</h3>
       <div class="stats">
-        <div class="stat-box">📅 Réservations en cours : {{ stats.reservations }}</div>
-        <div class="stat-box">👁️ Nombre de vues : {{ stats.vues }}</div>
-        <div class="stat-box">💬 Nouveaux messages : {{ stats.messages }}</div>
+        <router-link to="/reservations" class="stat-box clickable">
+          📅 Réservations en cours : {{ stats.reservations }}
+        </router-link>
+        <router-link to="/statistiques" class="stat-box clickable">
+          👁️ Nombre de vues : {{ stats.vues }}
+        </router-link>
+        <router-link
+          v-if="idClient"
+          :to="`/messagerie?idClient=${idClient}`"
+          class="stat-box clickable"
+        >
+          💬 Messages : {{ stats.messages }} nouveaux / {{ stats.totalMessages }} total
+        </router-link>
+        <router-link
+          v-else
+          to="/messagerie"
+          class="stat-box clickable"
+        >
+          💬 Aucun message client pour l’instant
+        </router-link>
       </div>
     </section>
 
@@ -35,13 +51,17 @@ export default {
         reservations: 0,
         vues: 0,
         messages: 0,
+        totalMessages: 0
       },
+      idClient: null
     };
   },
   mounted() {
     const idHote = localStorage.getItem("idHote");
+    console.log("ID Hôte récupéré :", idHote);
     if (!idHote) return;
 
+    // Récupérer les stats
     fetch(`http://localhost/soutenance_web/backend/api/get_dashboard_stats.php?id_hote=${idHote}`)
       .then(res => res.json())
       .then(data => {
@@ -49,50 +69,65 @@ export default {
           this.stats.reservations = data.reservations;
           this.stats.vues = data.vues;
           this.stats.messages = data.messages;
-        } else {
-          console.error("Erreur API:", data.error);
+          this.stats.totalMessages = data.totalMessages;
         }
-      })
-      .catch(err => {
-        console.error("Erreur fetch:", err);
+      });
+
+    // Récupérer le dernier client lié à cet hôte
+    fetch(`http://localhost/soutenance_web/backend/api/get_last_client.php?id_hote=${idHote}`)
+      .then(res => res.json())
+      .then(data => {
+        // Juste après avoir récupéré idClient
+        if (data.idClient) {
+          this.idClient = data.idClient;
+          localStorage.setItem("idClient", data.idClient); // ← stocker pour la messagerie
+        }
       });
   }
 };
 </script>
-  
-  <style scoped>
-  .dashboard {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    color: black;
-  }
-  .resume, .actions {
-    margin-bottom: 30px;
-  }
-  .stats {
-    display: flex;
-    gap: 20px;
-  }
-  .stat-box {
-    background: #f0f0f0;
-    padding: 15px;
-    border-radius: 8px;
-    flex: 1;
-    text-align: center;
-  }
-  .buttons {
-    display: flex;
-    gap: 20px;
-  }
-  .btn {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 6px;
-    text-decoration: none;
-  }
-  .btn:hover {
-    background-color: #0056b3;
-  }
-  </style>
-  
+
+<style scoped>
+.dashboard {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: black;
+}
+.resume, .actions {
+  margin-bottom: 30px;
+}
+.stats {
+  display: flex;
+  gap: 20px;
+}
+.stat-box {
+  background: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  flex: 1;
+  text-align: center;
+}
+.stat-box.clickable {
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  color: inherit;
+}
+.stat-box.clickable:hover {
+  background-color: #e0e0e0;
+}
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+.btn {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.btn:hover {
+  background-color: #0056b3;
+}
+</style>

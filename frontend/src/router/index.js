@@ -8,6 +8,7 @@ import ListeHebergements from '../views/ListeHebergements.vue';
 import ModifierHebergement from '../views/ModifierHebergement.vue';
 import ListeReservations from '../views/ListeReservations.vue';
 import Statistiques from '../views/Statistiques.vue';
+import Messagerie from '../views/Messagerie.vue';
 
 const routes = [
   { path: '/', redirect: '/login' }, // Login affiché en premier
@@ -18,7 +19,8 @@ const routes = [
   { path: '/mes-hebergements', component: ListeHebergements },
   { path: '/modifier-hebergement/:id', component: ModifierHebergement },
   { path: '/reservations', component: ListeReservations },
-  { path: '/statistiques', component: Statistiques }
+  { path: '/statistiques', component: Statistiques },
+  { path: '/messagerie', component: Messagerie }
 ];
 
 const router = createRouter({
