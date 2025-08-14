@@ -48,19 +48,38 @@
         });
     },
     methods: {
-      confirmer(id) {
-        alert("Confirmer la réservation " + id);
-        // Appel à une API à venir
-      },
-      annuler(id) {
-        alert("Annuler la réservation " + id);
-        // Appel à une API à venir
-      },
-      contacter(idClient) {
-        alert("Contacter le client " + idClient);
-        // Redirection vers messagerie à venir
+    async confirmer(id) {
+      await this.updateStatut(id, "confirmé");
+    },
+    async annuler(id) {
+      await this.updateStatut(id, "annulé");
+    },
+    async updateStatut(id, statut) {
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("statut", statut);
+
+      try {
+        const res = await fetch("http://localhost/soutenance_web/backend/api/update_reservation_statut.php", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          this.reservations = this.reservations.map(r =>
+            r.id_reservation === id ? { ...r, statut } : r
+          );
+        } else {
+          alert(data.message || "Erreur lors de la mise à jour.");
+        }
+      } catch (err) {
+        alert("Erreur serveur.");
       }
+    },
+    contacter(idClient) {
+      alert("Contacter le client " + idClient);
     }
+  }
   };
   </script>
   
