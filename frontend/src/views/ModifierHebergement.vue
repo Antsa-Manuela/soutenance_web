@@ -91,6 +91,7 @@
     padding: 20px;
     max-width: 600px;
     margin: auto;
+    color: black;
   }
   form input, form select, form textarea {
     display: block;

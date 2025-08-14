@@ -21,11 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if ($stmt->rowCount() > 0) {
     $user = $stmt->fetch();
+
+    // Maintenant que $user est défini, on peut chercher l’hôtel
+    $stmtHotel = $pdo->prepare("SELECT id_hotel FROM Hotel WHERE id_hote = ?");
+    $stmtHotel->execute([$user['id_hote']]);
+    $hotel = $stmtHotel->fetch();
+
     echo json_encode([
       "success" => true,
       "message" => "Connexion réussie",
-      "idHote" => $user['id_hote'], // ← c’est ça qu’on veut stocker
-      "nomEtablissement" => $user['nomEtablissement']
+      "idHote" => $user['id_hote'],
+      "nomEtablissement" => $user['nomEtablissement'],
+      "idHotel" => $hotel['id_hotel'] ?? null
     ]);
   } else {
     echo json_encode(["success" => false, "message" => "Email ou mot de passe incorrect"]);

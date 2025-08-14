@@ -32,7 +32,7 @@ header {
 }
 
 main {
-  max-width: 600px;
+  max-width: fit-content;
   margin: 0 auto;
   padding: 1rem;
   background: #f9f9f9;

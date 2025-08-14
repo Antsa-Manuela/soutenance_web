@@ -6,6 +6,7 @@ import Dashboard from '../views/Dashboard.vue';
 import AjouterHebergement from '../views/AjouterHebergement.vue';
 import ListeHebergements from '../views/ListeHebergements.vue';
 import ModifierHebergement from '../views/ModifierHebergement.vue';
+import ListeReservations from '../views/ListeReservations.vue';
 
 const routes = [
   { path: '/', redirect: '/login' }, // Login affiché en premier
@@ -14,7 +15,8 @@ const routes = [
   { path: '/dashboard', component: Dashboard },
   { path: '/ajouter-hebergement', component: AjouterHebergement },
   { path: '/mes-hebergements', component: ListeHebergements },
-  { path: '/modifier-hebergement/:id', component: ModifierHebergement }
+  { path: '/modifier-hebergement/:id', component: ModifierHebergement },
+  { path: '/reservations', component: ListeReservations }
 ];
 
 const router = createRouter({
