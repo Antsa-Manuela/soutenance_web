@@ -38,6 +38,7 @@
         <router-link to="/statistiques" class="btn">📊 Voir statistiques</router-link>
       </div>
     </section>
+    <button @click="deconnexion">Déconnexion</button>
   </div>
 </template>
 
@@ -83,7 +84,13 @@ export default {
           localStorage.setItem("idClient", data.idClient); // ← stocker pour la messagerie
         }
       });
+  },
+  methods: {
+  deconnexion() {
+    localStorage.clear();
+    this.$router.push("/login");
   }
+}
 };
 </script>
 

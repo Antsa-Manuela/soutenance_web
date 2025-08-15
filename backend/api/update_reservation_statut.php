@@ -9,6 +9,7 @@ require_once "../config/db.php";
 
 $id = $_POST['id'] ?? null;
 $statut = $_POST['statut'] ?? null;
+$justification = $_POST['justification'] ?? null;
 
 if (!$id || !$statut) {
   echo json_encode(["success" => false, "message" => "ID ou statut manquant"]);
@@ -16,8 +17,8 @@ if (!$id || !$statut) {
 }
 
 try {
-  $stmt = $pdo->prepare("UPDATE Reservation SET statut = ? WHERE id_reservation = ?");
-  $stmt->execute([$statut, $id]);
+  $stmt = $pdo->prepare("UPDATE reservation SET statut = ?, justification = ? WHERE id_reservation = ?");
+  $stmt->execute([$statut, $justification, $id]);
 
   echo json_encode(["success" => true, "message" => "Statut mis à jour"]);
 } catch (PDOException $e) {

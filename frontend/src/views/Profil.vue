@@ -17,6 +17,10 @@
         <button type="submit">Enregistrer</button>
         <p v-if="message">{{ message }}</p>
       </form>
+      <select v-model="langue" @change="changerLangue">
+        <option value="fr">Français</option>
+        <option value="mg">Malagasy</option>
+      </select>
     </div>
   </template>
   
@@ -27,7 +31,8 @@
         profil: {},
         message: '',
         photoFile: null,
-        previewPhoto: null
+        previewPhoto: null,
+        langue: localStorage.getItem("langue") || "fr"
       };
     },
     mounted() {
@@ -45,6 +50,10 @@
         this.photoFile = file;
         this.previewPhoto = URL.createObjectURL(file);
       },
+      changerLangue() {
+          localStorage.setItem("langue", this.langue);
+          location.reload(); // ou re-render
+        },
       async modifierProfil() {
         const formData = new FormData();
         for (const key in this.profil) {
