@@ -38,10 +38,13 @@ try {
   // Gestion des photos
   $photoPaths = [];
   foreach ($_FILES as $file) {
-    $target = "../../uploads/" . basename($file['name']);
+    $filename = basename($file['name']);
+    $target = "../../uploads/" . $filename;
+    $publicPath = "http://localhost/soutenance_web/uploads/" . $filename;
+    
     if (move_uploaded_file($file['tmp_name'], $target)) {
-      $photoPaths[] = $target;
-    }
+      $photoPaths[] = $publicPath;
+    }    
   }
 
   $insert = $pdo->prepare("
@@ -65,6 +68,13 @@ try {
     $dispo_fin
   ]);
 
+  $lastHebergementId = $pdo->lastInsertId();
+
+  foreach ($photoPaths as $path) {
+    $stmtPhoto = $pdo->prepare("INSERT INTO photo (url, id_hotel, id_hebergement) VALUES (?, ?, ?)");
+    $stmtPhoto->execute([$path, $idHotel, $lastHebergementId]);
+  }  
+  
   echo json_encode(["success" => true, "message" => "Hébergement ajouté avec succès."]);
 } catch (PDOException $e) {
   http_response_code(500);

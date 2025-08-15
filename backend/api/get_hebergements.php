@@ -13,22 +13,21 @@ if (!$idHote) {
 }
 
 try {
-  // Récupérer l’hôtel lié à l’hôte
-  $stmt = $pdo->prepare("SELECT id_hotel FROM Hotel WHERE id_hote = ?");
+  $stmt = $pdo->prepare("
+  SELECT h.*, GROUP_CONCAT(p.url) AS photos
+  FROM Hebergement h
+  LEFT JOIN photo p ON p.id_hebergement = h.id_hebergement
+  WHERE h.id_hotel IN (
+    SELECT id_hotel FROM Hotel WHERE id_hote = ?
+  )
+  GROUP BY h.id_hebergement
+  ");
   $stmt->execute([$idHote]);
-  $hotel = $stmt->fetch();
+  $hebergements = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-  if (!$hotel) {
-    echo json_encode(["hebergements" => []]);
-    exit;
+  foreach ($hebergements as &$h) {
+    $h['photos'] = $h['photos'] ? explode(',', $h['photos']) : [];
   }
-
-  $idHotel = $hotel['id_hotel'];
-
-  // Récupérer les hébergements
-  $stmt2 = $pdo->prepare("SELECT * FROM Hebergement WHERE id_hotel = ?");
-  $stmt2->execute([$idHotel]);
-  $hebergements = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
   echo json_encode(["hebergements" => $hebergements]);
 } catch (PDOException $e) {
