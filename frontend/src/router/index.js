@@ -10,6 +10,7 @@ import ListeReservations from '../views/ListeReservations.vue';
 import Statistiques from '../views/Statistiques.vue';
 import Messagerie from '../views/Messagerie.vue';
 import Profil from '../views/Profil.vue';
+import Evenements from '../views/Evenements.vue';
 
 const routes = [
   { path: '/', redirect: '/login' }, // Login affiché en premier
@@ -22,7 +23,8 @@ const routes = [
   { path: '/reservations', component: ListeReservations },
   { path: '/statistiques', component: Statistiques },
   { path: '/messagerie', component: Messagerie },
-  { path: '/profil', component: Profil }
+  { path: '/profil', component: Profil },
+  { path: '/evenements', component: Evenements },
 ];
 
 const router = createRouter({
