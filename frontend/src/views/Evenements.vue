@@ -97,7 +97,14 @@ export default {
       } catch (err) {
         console.error("Erreur ajout événement :", err);
         alert("Erreur lors de l’ajout.");
-      }
+      };
+      const res = await fetch("http://localhost/soutenance_web/backend/api/ajouter_evenement.php", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      console.log("Réponse ajout événement :", data); // ← Ajoute ça
+      alert(data.message);
     },
     async supprimer(id) {
       try {
@@ -125,6 +132,7 @@ export default {
   padding: 20px;
   max-width: 700px;
   margin: auto;
+  color: black;
 }
 form input, form textarea {
   display: block;

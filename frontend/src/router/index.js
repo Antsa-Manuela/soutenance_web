@@ -11,6 +11,8 @@ import Statistiques from '../views/Statistiques.vue';
 import Messagerie from '../views/Messagerie.vue';
 import Profil from '../views/Profil.vue';
 import Evenements from '../views/Evenements.vue';
+import AdminLogin from '../views/AdminLogin.vue';
+import AdminDashboard from '../views/AdminDashboard.vue';
 
 const routes = [
   { path: '/', redirect: '/login' }, // Login affiché en premier
@@ -25,6 +27,8 @@ const routes = [
   { path: '/messagerie', component: Messagerie },
   { path: '/profil', component: Profil },
   { path: '/evenements', component: Evenements },
+  { path: '/admin-login', component: AdminLogin },
+  { path: '/admin-dashboard', component: AdminDashboard },
 ];
 
 const router = createRouter({
