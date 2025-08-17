@@ -13,6 +13,7 @@ import Profil from '../views/Profil.vue';
 import Evenements from '../views/Evenements.vue';
 import AdminLogin from '../views/AdminLogin.vue';
 import AdminDashboard from '../views/AdminDashboard.vue';
+import GestionUtilisateurs from '../views/GestionUtilisateurs.vue';
 
 const routes = [
   { path: '/', redirect: '/login' }, // Login affiché en premier
@@ -29,6 +30,7 @@ const routes = [
   { path: '/evenements', component: Evenements },
   { path: '/admin-login', component: AdminLogin },
   { path: '/admin-dashboard', component: AdminDashboard },
+  { path: '/gestion-utilisateurs', component: GestionUtilisateurs },
 ];
 
 const router = createRouter({
