@@ -1,20 +1,10 @@
 <!-- frontend/src/App.vue -->
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-    <h1>Plateforme Hôte</h1>
-  </header>
-<!-- 
-  <nav>
-    <router-link to="/login">Connexion</router-link> |
-    <router-link to="/register">Inscription</router-link> |
-    <router-link to="/dashboard">Accueil</router-link>
-  </nav>
- -->
-  <main>
+  <Layout>
     <router-view />
-  </main>
+  </Layout>
 </template>
+
 
 <script setup>
 </script>
