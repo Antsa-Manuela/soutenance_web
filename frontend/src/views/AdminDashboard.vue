@@ -16,7 +16,6 @@
             <path d="M12 2v10" />
             <path d="M6.2 6.2a9 9 0 1 0 11.6 0" />
           </svg>
-          <span class="logout-text">Déconnexion</span>
         </button>
       </div>
     </header>
@@ -27,21 +26,21 @@
         <div class="stat-card">
           <div class="stat-icon users">👥</div>
           <div class="stat-content">
-            <span class="stat-value">154</span>
+            <span class="stat-value">{{ stats.totalUsers }}</span>
             <span class="stat-label">Utilisateurs total</span>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon events">📅</div>
           <div class="stat-content">
-            <span class="stat-value">27</span>
+            <span class="stat-value">{{ stats.totalEvents }}</span>
             <span class="stat-label">Événements ce mois</span>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon revenue">💰</div>
           <div class="stat-content">
-            <span class="stat-value">42.5K</span>
+            <span class="stat-value">{{ stats.totalRevenue }}</span>
             <span class="stat-label">Revenue total</span>
           </div>
         </div>
@@ -80,11 +79,11 @@
           
           <div class="quick-stats">
             <div class="stat-mini">
-              <span class="mini-value">5</span>
+              <span class="mini-value">{{ stats.eventsToday }}</span>
               <span class="mini-label">Aujourd'hui</span>
             </div>
             <div class="stat-mini">
-              <span class="mini-value">12</span>
+              <span class="mini-value">{{ stats.eventsWeek }}</span>
               <span class="mini-label">Cette semaine</span>
             </div>
           </div>
@@ -136,7 +135,15 @@ Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 export default {
   data() {
     return {
-      nomAdmin: localStorage.getItem("nomAdmin") || "Admin"
+      nomAdmin: localStorage.getItem("nomAdmin") || "Admin",
+      stats: {
+        totalUsers: 0,
+        totalEvents: 0,
+        totalRevenue: "42.5K",
+        eventsToday: 0,
+        eventsWeek: 0
+      },
+      evenements: []
     };
   },
   mounted() {
@@ -144,6 +151,16 @@ export default {
       .then(res => res.json())
       .then(data => {
         this.renderUserChart(data.roles);
+        this.evenements = data.evenements || [];
+        this.stats.totalUsers = data.totalUsers || 0;
+        this.stats.totalEvents = data.totalEvents || 0;
+        this.stats.totalRevenue = data.totalRevenue || "0 Ar";
+        this.stats.eventsToday = data.eventsToday || 0;
+        this.stats.eventsWeek = data.eventsWeek || 0;
+      })
+      .catch(err => {
+        console.error("Erreur chargement dashboard :", err);
+        this.evenements = [];
       });
   },
   methods: {
@@ -172,9 +189,7 @@ export default {
         options: {
           cutout: '65%',
           plugins: {
-            legend: { 
-              display: false
-            },
+            legend: { display: false },
             tooltip: {
               bodyFont: {
                 family: 'Montserrat',
@@ -202,7 +217,7 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: 5vw;
   background: linear-gradient(135deg, 
     rgba(60, 21, 24, 0.05) 0%, 
     rgba(245, 245, 245, 0.95) 50%,
@@ -212,6 +227,10 @@ export default {
 
 /* 🔝 Header amélioré */
 .admin-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -315,9 +334,6 @@ export default {
   transition: transform 0.3s ease;
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
-}
 
 .stat-icon {
   font-size: 2rem;
@@ -373,11 +389,6 @@ export default {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid rgba(60, 21, 24, 0.05);
-}
-
-.chart-section:hover, .event-section:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(60, 21, 24, 0.15);
 }
 
 .section-header {

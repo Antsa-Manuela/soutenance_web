@@ -70,6 +70,32 @@ try {
   // Si tu veux des stats sur les événements, assure-toi que la table `evenement` existe
   // et adapte la requête selon ses colonnes réelles.
   $evenements = []; // ← vide pour éviter l'erreur
+  $stmtUsers = $pdo->query("SELECT COUNT(*) FROM utilisateur");
+  $totalUsers = $stmtUsers->fetchColumn();
+  // 🔹 Total utilisateurs
+  $stmtUsers = $pdo->query("SELECT COUNT(*) FROM utilisateur");
+  $totalUsers = $stmtUsers->fetchColumn();
+
+  // 🔹 Total événements
+  $stmtEvents = $pdo->query("SELECT COUNT(*) FROM evenement");
+  $totalEvents = $stmtEvents->fetchColumn();
+
+  // 🔹 Total revenue (exemple fictif)
+  $stmtRevenue = $pdo->query("SELECT SUM(montant) FROM paiement");
+  $totalRevenue = $stmtRevenue->fetchColumn();
+  $totalRevenueFormatted = number_format($totalRevenue / 1000, 1) . "K Ar";
+
+  // 🔹 Événements aujourd'hui
+  $stmtToday = $pdo->query("SELECT COUNT(*) FROM evenement WHERE DATE(date_debut) = CURDATE()");
+  $eventsToday = $stmtToday->fetchColumn();
+
+  // 🔹 Événements cette semaine
+  $stmtWeek = $pdo->query("
+    SELECT COUNT(*) FROM evenement 
+    WHERE WEEK(date_debut, 1) = WEEK(CURDATE(), 1) 
+    AND YEAR(date_debut) = YEAR(CURDATE())
+  ");
+  $eventsWeek = $stmtWeek->fetchColumn();
 
   // 🔹 Réponse JSON
   echo json_encode([
@@ -78,8 +104,13 @@ try {
     "messages" => $messages,
     "totalMessages" => $totalMessages,
     "roles" => $roles,
-    "evenements" => $evenements
-  ]);
+    "evenements" => $evenements,
+    "totalUsers" => $totalUsers,
+    "totalEvents" => $totalEvents,
+    "totalRevenue" => $totalRevenueFormatted,
+    "eventsToday" => $eventsToday,
+    "eventsWeek" => $eventsWeek
+  ]);  
 } catch (PDOException $e) {
   echo json_encode(["error" => "Erreur SQL : " . $e->getMessage()]);
 }

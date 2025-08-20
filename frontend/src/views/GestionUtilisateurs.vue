@@ -16,7 +16,6 @@
             <path d="M12 2v10" />
             <path d="M6.2 6.2a9 9 0 1 0 11.6 0" />
           </svg>
-          <span class="logout-text">Déconnexion</span>
         </button>
       </div>
     </header>
@@ -198,7 +197,7 @@ export default {
 <style scoped>
 .gestion-utilisateurs {
   position: absolute;
-  top: 0;
+  top: 5vw;
   bottom: 0;
   right: 0;
   left: 0;
@@ -208,6 +207,10 @@ export default {
 
 /* 🔝 Header amélioré */
 .admin-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
